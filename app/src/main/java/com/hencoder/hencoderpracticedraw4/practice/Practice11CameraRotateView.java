@@ -3,7 +3,9 @@ package com.hencoder.hencoderpracticedraw4.practice;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
@@ -17,6 +19,9 @@ public class Practice11CameraRotateView extends View {
     Bitmap bitmap;
     Point point1 = new Point(200, 200);
     Point point2 = new Point(600, 200);
+
+    Camera camera = new Camera();
+    Matrix matrix = new Matrix();
 
     public Practice11CameraRotateView(Context context) {
         super(context);
@@ -37,8 +42,41 @@ public class Practice11CameraRotateView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        float dx = point1.x + bitmap.getWidth() / 2;
+
+        canvas.save();
+
+        camera.save();
+        camera.rotateX(30);
+        // 保持图形左右对称，
+        // 之后移动回原来的位置
+        canvas.translate(dx, 0);
+        // 将 camera 操作投影到画布上
+        camera.applyToCanvas(canvas);
+        // 使图片水平方向中心和 y 轴重合
+        canvas.translate(-dx, 0);
+
+        camera.restore();
 
         canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
+        canvas.restore();
+
+        float dx2 = point2.x + bitmap.getWidth() / 2;
+        float dy = point2.y + bitmap.getHeight() * 0.56f;
+        canvas.save();
+        camera.save();
+        camera.rotateY(30);
+        // 保持图形上下对称
+        // 之后移动回原来的位置
+        canvas.translate(dx2, dy);
+        // 将 camera 操作投影到画布上
+        camera.applyToCanvas(canvas);
+        // 使图片水平方向中心和 x 轴重合
+        canvas.translate(-dx2, -dy);
+
+        camera.restore();
         canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
+
+        canvas.restore();
     }
 }

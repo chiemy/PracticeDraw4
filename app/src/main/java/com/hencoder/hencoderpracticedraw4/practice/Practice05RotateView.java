@@ -39,6 +39,12 @@ public class Practice05RotateView extends View {
         super.onDraw(canvas);
 
         canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
+
+        float px = point2.x + bitmap.getWidth() / 2;
+        float py = point2.y + bitmap.getHeight() / 2;
+        canvas.save();
+        canvas.rotate(45, px, py);
         canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
+        canvas.restore();
     }
 }
